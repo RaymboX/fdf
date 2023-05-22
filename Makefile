@@ -16,13 +16,17 @@ CC				= 	gcc
 RM				= 	rm -rf
 LIBMLX 			= 	-L /usr/local/lib/ -lmlx -framework OpenGL -framework AppKit
 LIB_LINUX		=	-Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz
+LIBMLX_BETA		=	-L./mlx -lmlx -framework OpenGL -framework AppKit
+LIBRARY_BONUS	=	$(LIBFT) $(LIBMLX_BETA)
 INCLUDE 		= 	-I /usr/local/include
+MLX				=	libmlx.dylib
 
 #DIRECTORIES--------------------------------------------------------------------
 
 SRCS_DIR 		= 	./srcs
 OBJS_DIR		= 	./objs
 LIBFT_DIR		= 	./libft
+MLX_DIR			=	mlx
 
 #FILES--------------------------------------------------------------------------
 
@@ -44,6 +48,8 @@ SRCS_FILES	 	= 	0000_fdf.c \
 
 LIBFT_FILES		= 	libft.a
 
+
+
 #FILES VAR----------------------------------------------------------------------
 SRCS 			= 	$(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
 
@@ -62,10 +68,13 @@ all : 				init $(NAME) command
 
 init:
 					@$(MAKE) -s -C $(LIBFT_DIR)
+					@$(MAKE) -s -C $(MLX_DIR)
 					@mkdir -p $(OBJS_DIR)
+					@$(RM) $(MLX)
+					@cp $(MLX_DIR)/$(MLX) $(MLX)
 
 $(NAME):			$(OBJS) 
-					@$(CC) $(CFLAGS) $(INCLUDE) $(LIBFT) $(LIBMLX) -o $(NAME) $(OBJS)
+					@$(CC) $(CFLAGS) $(INCLUDE) $(LIBFT) $(LIBRARY_BONUS) -o $(NAME) $(OBJS)
 					@echo "$G$(NAME) compiled$W"
 					
 command:
@@ -89,12 +98,14 @@ $(LIBFT):
 
 clean:
 					@$(MAKE) -s clean -C $(LIBFT_DIR)
+					@$(MAKE) -s clean -C $(MLX_DIR)
 					@$(RM) $(OBJS)
 					@$(RM) $(OBJS_DIR)
 					@echo "$RAll objects deleted$W"
 
 fclean: 			clean
 					@$(MAKE) -s fclean -C $(LIBFT_DIR)
+					@$(RM) $(MLX)
 					@$(RM) $(NAME)
 					@echo "$R$(NAME) deleted$W"
 	
